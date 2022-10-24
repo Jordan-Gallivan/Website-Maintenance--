@@ -55,7 +55,6 @@ class FileReader(object):
         
         # title and summary
         self.title = entryFile.readline().strip("\n")
-        print(self.title[1])
         self.summary = entryFile.readline().strip("\n")
         
         # iterate through remaining lines for content of entry
