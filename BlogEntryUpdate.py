@@ -10,14 +10,14 @@ These comments are stored as global variables.
 
 Typical usage example:
 
-  html = HTML()
-  js = JS()
-  xml = XML()
+  blogInput = FileReader()
+  html = HTML(blogInput)
+  js = JS(blogInput)
+  xml = XML(blogInput)
 """
 
 
 from datetime import datetime
-import time
 import codecs
 
 # Initialize GLobal Variables
@@ -55,6 +55,7 @@ class FileReader(object):
         
         # title and summary
         self.title = entryFile.readline().strip("\n")
+        print(self.title[1])
         self.summary = entryFile.readline().strip("\n")
         
         # iterate through remaining lines for content of entry
@@ -172,6 +173,25 @@ class FileReader(object):
         
         file.close()
         
+    def get_date(self):
+        return self.date
+    
+    def get_jsDate(self):
+        return self.jsDate
+    
+    def get_title(self):
+        return self.title
+    
+    def get_underscore_title(self):
+        return self.title_
+    
+    def get_summary(self):
+        return self.summary
+    
+    def get_paragraph(self):
+        return self.paragraph
+    
+        
     
 
 
@@ -180,7 +200,10 @@ class HTML(FileReader):
     Subclass of FileReader that reads in an HTML File and inserts blog entry 
         content.
     Attributes:
-        Inherits all attributes from FileReader.
+        title: A String for the title of the blog post
+        title_: A String for the title of the blog post, words connected with "_"
+        paragraph: A list of Strings with each element being a paragraph
+            of the blog post surrounded by <p></p> tags
         heading: A String of the heading conent between <h1></h1> tags.
         before: all code before the catch comment
         after: all code after the catch comment
@@ -188,8 +211,21 @@ class HTML(FileReader):
     """
     
     
-    def __init__(self):
-        FileReader.__init__(self)   # inherit Superclass __init__
+    def __init__(self, blogInput):
+        """ Inits HTML Class and initializes all variables.  All class methods
+            are called from the init method.  Writes new HTML File with updated
+            content from blog entry.
+
+        Parameters
+        ----------
+        blogInput : FileReader object
+
+        """
+        # Get attributes from blogInput needed for HTML File
+        self.title = blogInput.get_title()
+        self.title_ = blogInput.get_underscore_title()
+        self.paragraph = blogInput.get_paragraph()
+        
         # initialize HTML Content
         htmlFile = "index.html"
         self.heading = self.heading_generator() # class method
@@ -238,7 +274,9 @@ class JS(FileReader):
         for the blog entry links drop down menu inside the blogObject Object
     
     Attributes:
-        Inherits all attributes from FileReader.
+        title: A String representing the title of the blog entry, pulled from
+            blogInput
+        jsDate: A date String for the drop down menu in dd MMM YYYY format
         jsObject: A String representing the title and date of the blog entry 
             for the drop down menu.
         before: all code before the catch comment.
@@ -249,8 +287,20 @@ class JS(FileReader):
     """
     
     
-    def __init__(self):
-        FileReader.__init__(self)
+    def __init__(self, blogInput):
+        """ Inits JS Class and initializes all variables.  All class methods
+            are called from the init method.  Writes new JS File with updated
+            content from blog entry.
+
+        Parameters
+        ----------
+        blogInput : FileReader object
+
+        """
+        # Get attributes from blogInput needed for HTML File        
+        self.title_ = blogInput.get_underscore_title()
+        self.jsDate = blogInput.get_jsDate()
+
         jsFile = "components/blog-links.js"
         self.jsObject = self.js_object()
         self.before, self.after, self.spaceCount = self.read_in_file(jsFile, JS_COMMENT)
@@ -304,15 +354,37 @@ class XML(FileReader):
     Subclass of FileReader that reads in an HTML File and inserts blog entry 
         content.
     Attributes:
-        Inherits all attributes from FileReader.
-        heading: A String of the heading conent between <h1></h1> tags.
+        date: A date String in YYYY-mm-ddTHH:MM:SSZ format
+        title: A String for the title of the blog post
+        title_: A String for the title of the blog post, words connected with "_"
+        summary: A String for the summary of the blog post
+        paragraph: A list of Strings with each element being a paragraph
+            of the blog post surrounded by <p></p> tags
         before: all code before the catch comment
         after: all code after the catch comment
         spaceCount: An integer of spaces to align with existing code.
     """    
     
-    def __init__(self):
-        FileReader.__init__(self)
+    def __init__(self, blogInput):
+        """ Inits XML Class and initializes all variables.  All class methods
+            are called from the init method.  Writes new XML File with updated
+            content from blog entry.
+
+        Parameters
+        ----------
+        blogInput : FileReader object
+
+        """
+        
+        
+        # FileReader.__init__(self)
+        # Get attributes from blogInput needed for HTML File  
+        self.date = blogInput.get_date()
+        self.title = blogInput.get_title()
+        self.title_ = blogInput.get_underscore_title()
+        self.paragraph = blogInput.get_paragraph()
+        self.summary = blogInput.get_summary()
+        
         xmlFile = "feed.xml"
         
         self.before, self.after, self.spaceCount = self.read_in_file(xmlFile, HTML_COMMENT)
@@ -343,11 +415,7 @@ class XML(FileReader):
 		</author>
         </entry>"""
         
-
-html = HTML()
-js = JS()
-xml = XML()
-
-
-
-
+blogInput = FileReader()
+html = HTML(blogInput)
+js = JS(blogInput)
+xml = XML(blogInput)
