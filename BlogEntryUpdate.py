@@ -41,7 +41,7 @@ class FileReader(object):
         summary: A String for the summary of the blog post
         content: A multi-line String for the blog content
         paragraph: A list of Strings with each element being a paragraph
-            of the blog post surrounded by <p></p> tags
+            of the blog post surrounded by <p></p> elements
     """
     def __init__(self):
         
@@ -74,7 +74,7 @@ class FileReader(object):
         # replace " " with "_" for id in html and href
         self.title_ = "_".join(self.title.split())
         
-        # encapsulate blog entry in paragraph tags for HTML/XML
+        # encapsulate blog entry in paragraph elements for HTML/XML
         self.paragraph = self.paragraph_generator()
         
     def read_in_file(self,fileName, comment):
@@ -135,11 +135,11 @@ class FileReader(object):
         -------
         paragraph : A List of strings
             each element is content of the blog entry between 
-            HTML/XML paragraph tags.
+            HTML/XML paragraph elements.
 
         """
         paragraph = []
-        # iterate through blocks of text and add tags
+        # iterate through blocks of text and add elements
         for block in self.content:
             paragraph.append("<p>" + block + "</p>" + "\n")
         return paragraph
@@ -202,8 +202,8 @@ class HTML(FileReader):
         title: A String for the title of the blog post
         title_: A String for the title of the blog post, words connected with "_"
         paragraph: A list of Strings with each element being a paragraph
-            of the blog post surrounded by <p></p> tags
-        heading: A String of the heading conent between <h1></h1> tags.
+            of the blog post surrounded by <p></p> elements
+        heading: A String of the heading conent between <h1></h1> elements.
         before: all code before the catch comment
         after: all code after the catch comment
         spaceCount: An integer of spaces to align with existing code.
@@ -251,12 +251,12 @@ class HTML(FileReader):
     
     def HTML_entry(self):
         """
-        Places all text entries between <p></p> tags.
+        Places all text entries between <p></p> elements.
 
         Returns
         -------
         entry : A list of multi-line Strings; each element is a paragraph of text between 
-            <p></p> tags
+            <p></p> elements
 
         """
         
@@ -358,7 +358,7 @@ class XML(FileReader):
         title_: A String for the title of the blog post, words connected with "_"
         summary: A String for the summary of the blog post
         paragraph: A list of Strings with each element being a paragraph
-            of the blog post surrounded by <p></p> tags
+            of the blog post surrounded by <p></p> elements
         before: all code before the catch comment
         after: all code after the catch comment
         spaceCount: An integer of spaces to align with existing code.
